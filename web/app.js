@@ -22,14 +22,14 @@ class Http {
           error.response.status === 401 &&
           error.response.data.name === 'EXPIRED_ACCESS_TOKEN'
         ) {
-          this.refreshTokenRequest = this.refreshTokenRequest
+          this.refreshTokenRequest = this.refreshTokenRequest // Check call duplicated refresh token each request
             ? this.refreshTokenRequest
             : refreshToken().finally(() => {
                 this.refreshTokenRequest = null
               })
           return this.refreshTokenRequest
             .then((access_token) => {
-              this.instance(error.response.config)
+              this.instance(error.response.config) // The API callback earlier failed // Should check refresh token request to cover callback hell refresh token
             })
             .catch((refreshTokenerror) => {
               throw refreshTokenerror
